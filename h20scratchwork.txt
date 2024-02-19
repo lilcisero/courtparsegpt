@@ -1,0 +1,28 @@
+H20 Gpt question 
+
+i typed this in
+
+# Find the first <h1> tag on the page
+h1_tag = soup.find('h1')
+
+instead of that i want to 1
+
+# the below is what you use if you 
+
+chmod +x parser5.py  
+
+
+
+
+
+
+# You can use the find_all() method to find all \<a\> tags, which represent hyperlinks on a webpage.
+
+For example, to find all links and print their URLs, you can use the following code:
+
+a_tags = soup.find_all('a')
+for a in a_tags:
+    print(a['href'])
+
+
+

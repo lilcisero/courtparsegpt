@@ -1,0 +1,8 @@
+a_tags = soup.find_all('a')
+for a in a_tags:
+    print(a['href'])
+
+if h1_tag:
+    print(f'The first <h1> tag is: {h1_tag.text}')
+else:
+    print('No <h1> tag found.')
