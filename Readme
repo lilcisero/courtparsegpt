@@ -1,0 +1,116 @@
+This code will be messy for a time. I am going to build a program that parses court documents. 
+
+1. create a virtual environment in python 
+
+'''
+python my_env
+
+# but change my_env to a name of your choice. it is brainenv in the current repo 
+
+'''
+2. download beautifulsoup4 
+
+pip install beautifulsoup 4 
+
+3. Save the below file as a .py you can manipulate it to change what 
+
+####################
+
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.drudgereport.com/'
+response = requests.get(url)
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# You can use the `find_all()` method to find all `\<img\>` tags, which represent images on a webpage. For example, to find all images and print their `src` attributes (which contain the image URLs), you can use the following code:
+
+img_tags = soup.find_all('img')
+for img in img_tags:
+    print(img['src'])
+
+######################
+
+
+error code 
+
+The below install worked you got a 
+
+No <h1> tag found.
+
+
+
+
+(base) pc@pc-Lenovo-G500s:~$ conda deactivate 
+pc@pc-Lenovo-G500s:~$ mkdir parserproject6
+pc@pc-Lenovo-G500s:~$ cd parserproject6
+pc@pc-Lenovo-G500s:~/parserproject6$ virtualenv brain_env
+created virtual environment CPython3.11.5.final.0-64 in 200ms
+  creator CPython3Posix(dest=/home/pc/parserproject6/brain_env, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/pc/.local/share/virtualenv)
+    added seed packages: pip==23.3.2, setuptools==69.0.3, wheel==0.42.0
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+pc@pc-Lenovo-G500s:~/parserproject6$ cd brain_env
+pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ source bin/activate
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ pip install beautifulsoup4
+Collecting beautifulsoup4
+  Using cached beautifulsoup4-4.12.3-py3-none-any.whl.metadata (3.8 kB)
+Collecting soupsieve>1.2 (from beautifulsoup4)
+  Using cached soupsieve-2.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached beauuser.emailtifulsoup4-4.12.3-py3-none-any.whl (147 kB)
+Using cached soupsieve-2.5-py3-none-any.whl (36 kB)
+Installing collected packages: soupsieve, beautifulsoup4
+Successfully installed beautifulsoup4-4.12.3 soupsieve-2.5
+
+[notice] A new release of pip is available: 23.3.2 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ pip install --upgrade pip
+Requirement already satisfied: pip in ./lib/python3.11/site-packages (23.3.2)
+Collecting pip
+  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 6.1 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.3.2
+    Uninstalling pip-23.3.2:
+      Successfully uninstalled pip-23.3.2
+Successfully installed pip-24.0
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ cd bin
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+Traceback (most recent call last):
+  File "/home/pc/parserproject6/brain_env/bin/parser5.py", line 1, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip insall beautifulsoup4
+ERROR: unknown command "insall" - maybe you meant "install"
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip install beautifulsoup4
+Requirement already satisfied: beautifulsoup4 in /home/pc/parserproject6/brain_env/lib/python3.11/site-packages (4.12.3)
+Requirement already satisfied: soupsieve>1.2 in /home/pc/parserproject6/brain_env/lib/python3.11/site-packages (from beautifulsoup4) (2.5)
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+Traceback (most recent call last):
+  File "/home/pc/parserproject6/brain_env/bin/parser5.py", line 1, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ ^C
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip install requests 
+Collecting requests
+  Using cached requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+Collecting charset-normalizer<4,>=2 (from requests)
+  Using cached charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (33 kB)
+Collecting idna<4,>=2.5 (from requests)
+  Using cached idna-3.6-py3-none-any.whl.metadata (9.9 kB)
+Collecting urllib3<3,>=1.21.1 (from requests)
+  Using cached urllib3-2.2.1-py3-none-any.whl.metadata (6.4 kB)
+Collecting certifi>=2017.4.17 (from requests)
+  Using cached certifi-2024.2.2-py3-none-any.whl.metadata (2.2 kB)
+Using cached requests-2.31.0-py3-none-any.whl (62 kB)
+Using cached certifi-2024.2.2-py3-none-any.whl (163 kB)
+Using cached charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (140 kB)
+Using cached idna-3.6-py3-none-any.whl (61 kB)
+Using cached urllib3-2.2.1-py3-none-any.whl (121 kB)
+Installing collected packages: urllib3, idna, charset-normalizer, certifi, requests
+Successfully installed certifi-2024.2.2 charset-normalizer-3.3.2 idna-3.6 requests-2.31.0 urllib3-2.2.1
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+No <h1> tag found.
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ 
