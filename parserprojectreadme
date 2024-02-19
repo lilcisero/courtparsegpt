@@ -1,0 +1,238 @@
+# This is going to be messy for a time but everything will be here 
+
+This is how you create a virtual enviornment on linux and install beautifulsoup to parse websites 
+
+
+1. First we are going to make a directory 
+
+'''
+
+mkdir parser8
+
+'''
+
+parser 8 can be replaced with another name 
+
+2. make a python virtual environment 
+
+This can get messy depending on your set up. Keep trying until you get the parenthesis in your terminal with the name (base) for example 
+
+try the following 
+
+'''
+
+virtualenv my_env
+
+'''
+
+change my_env to a name you want 
+
+3. cd to your new virutal env file 
+
+'''
+
+cd brainenv
+
+'''
+
+3. Activat the virtual environment 
+
+'''
+
+source bin/activate
+
+
+'''
+
+# note you have to be in the 
+
+4. update pip
+
+pip install --upgrade pip
+
+
+5. Write a python file that has the features you want to use for getting info from websites 
+
+
+I. Get links 
+
+```
+
+# python code uses Beautiful Soup to extract all the links from a given website 
+import requests
+from bs4 import BeautifulSoup
+
+# Set the URL of the website you want to scrape
+url = "https://www.example.com"
+
+# Send an HTTP request to the website
+response = requests.get(url)
+
+# Check that the request was successful
+if response.status_code == 200:
+    # Parse the HTML content of the website using Beautiful Soup
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    # Find all the anchor tags in the HTML content
+    links = soup.find_all("a")
+
+    # Extract the href attribute of each link and print it to the console
+    for link in links:
+        href = link.get("href")
+        if href:
+            print(href)
+else:
+    print(f"Failed to load the website. Status code: {response.status_code}")
+```
+This script uses the `requests` library to send an HTTP request to the specified website, and then uses Beautiful Soup to parse the HTML content of the website. It then finds all the anchor tags in the HTML content using the `find_all()` method, and extracts the `href` attribute of each link using the `get()` method. Finally, it prints the extracted links to the console.
+
+Note that this script assumes that the website's HTML content is well-formed and that all the links have a valid `href` attribute. If this is not the case, you may need to modify the script to handle these situations appropriately. Also, be aware that web scraping may be against the terms of service of some websites, so make sure to check the website's policies before scraping.
+
+
+II. Download images 
+
+
+Here's an example Python script that uses Beautiful Soup to download all the images on a website to the current directory:
+```python
+import os
+import requests
+from bs4 import BeautifulSoup
+
+# Set the URL of the website to scrape
+url = 'https://www.drudgereport.com/'
+
+# Send a request to the website and get its content
+response = requests.get(url)
+content = response.content
+
+# Parse the HTML content using Beautiful Soup
+soup = BeautifulSoup(content, 'html.parser')
+
+# Find all the <img> tags in the HTML
+img_tags = soup.find_all('img')
+
+# Loop through each <img> tag and download the image
+for img in img_tags:
+    # Get the image source URL
+    src = img['src']
+    
+    # Send a request to download the image
+    response = requests.get(src)
+    
+    # Get the filename from the image source URL
+    filename = os.path.basename(src)
+    
+    # Save the image to the current directory
+    with open(filename, 'wb') as f:
+        f.write(response.content)
+
+print('Downloaded all images.')
+```
+This script first sends a request to the specified website and gets its HTML content. It then parses the HTML content using Beautiful Soup and finds all the `\<img\>` tags in the HTML. For each `\<img\>` tag, it extracts the image source URL, sends a request to download the image, and saves the image to the current directory using the original filename from the image source URL.
+
+Note that this script assumes that all the images on the website are hosted on the same domain as the website itself. If the images are hosted on a different domain, you may need to modify the script accordingly. Additionally, some websites may have restrictions on scraping or downloading their content, so please make sure to respect the website's terms of service and copyright policies.
+
+
+
+6. install requests 
+
+pip install requests 
+
+7. insall beauifulsoup4 
+
+pip install beautifulsoup4
+
+8. run the python file until it does tasks for you. 
+
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+Going to the error code 
+
+
+(base) pc@pc-Lenovo-G500s:~$ conda deactivate 
+pc@pc-Lenovo-G500s:~$ mkdir parserproject6
+pc@pc-Lenovo-G500s:~$ cd parserproject6
+pc@pc-Lenovo-G500s:~/parserproject6$ virtualenv brain_env
+created virtual environment CPython3.11.5.final.0-64 in 200ms
+  creator CPython3Posix(dest=/home/pc/parserproject6/brain_env, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/pc/.local/share/virtualenv)
+    added seed packages: pip==23.3.2, setuptools==69.0.3, wheel==0.42.0
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+pc@pc-Lenovo-G500s:~/parserproject6$ cd brain_env
+pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ source bin/activate
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ pip install beautifulsoup4
+Collecting beautifulsoup4
+  Using cached beautifulsoup4-4.12.3-py3-none-any.whl.metadata (3.8 kB)
+Collecting soupsieve>1.2 (from beautifulsoup4)
+  Using cached soupsieve-2.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached beauuser.emailtifulsoup4-4.12.3-py3-none-any.whl (147 kB)
+Using cached soupsieve-2.5-py3-none-any.whl (36 kB)
+Installing collected packages: soupsieve, beautifulsoup4
+Successfully installed beautifulsoup4-4.12.3 soupsieve-2.5
+
+[notice] A new release of pip is available: 23.3.2 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ pip install --upgrade pip
+Requirement already satisfied: pip in ./lib/python3.11/site-packages (23.3.2)
+Collecting pip
+  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 6.1 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.3.2
+    Uninstalling pip-23.3.2:
+      Successfully uninstalled pip-23.3.2
+Successfully installed pip-24.0
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env$ cd bin
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+Traceback (most recent call last):
+  File "/home/pc/parserproject6/brain_env/bin/parser5.py", line 1, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip insall beautifulsoup4
+ERROR: unknown command "insall" - maybe you meant "install"
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip install beautifulsoup4
+Requirement already satisfied: beautifulsoup4 in /home/pc/parserproject6/brain_env/lib/python3.11/site-packages (4.12.3)
+Requirement already satisfied: soupsieve>1.2 in /home/pc/parserproject6/brain_env/lib/python3.11/site-packages (from beautifulsoup4) (2.5)
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+Traceback (most recent call last):
+  File "/home/pc/parserproject6/brain_env/bin/parser5.py", line 1, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ ^C
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ pip install requests 
+Collecting requests
+  Using cached requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+Collecting charset-normalizer<4,>=2 (from requests)
+  Using cached charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (33 kB)
+Collecting idna<4,>=2.5 (from requests)
+  Using cached idna-3.6-py3-none-any.whl.metadata (9.9 kB)
+Collecting urllib3<3,>=1.21.1 (from requests)
+  Using cached urllib3-2.2.1-py3-none-any.whl.metadata (6.4 kB)
+Collecting certifi>=2017.4.17 (from requests)
+  Using cached certifi-2024.2.2-py3-none-any.whl.metadata (2.2 kB)
+Using cached requests-2.31.0-py3-none-any.whl (62 kB)
+Using cached certifi-2024.2.2-py3-none-any.whl (163 kB)
+Using cached charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (140 kB)
+Using cached idna-3.6-py3-none-any.whl (61 kB)
+Using cached urllib3-2.2.1-py3-none-any.whl (121 kB)
+Installing collected packages: urllib3, idna, charset-normalizer, certifi, requests
+Successfully installed certifi-2024.2.2 charset-normalizer-3.3.2 idna-3.6 requests-2.31.0 urllib3-2.2.1
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ python parser5.py
+No <h1> tag found.
+(brain_env) pc@pc-Lenovo-G500s:~/parserproject6/brain_env/bin$ 
+
