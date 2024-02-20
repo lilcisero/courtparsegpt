@@ -1,0 +1,415 @@
+# 1. make a directory and start a python virtual environment in it 
+
+python -m venv myenv
+
+# here we are going to call it parser_env
+
+python -m venv parser_env
+
+# to activate the virtual env run the below. 
+# you need to navigate to the directory that was created by the virtual environment 
+
+source bin/activate
+
+# you might also want to upgrade pip within the directory 
+
+pip install --upgrade pip
+
+# once you have started the virtual environment it should say so in paranthesis on the terminal
+
+#(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env$ 
+
+# below we are going to write pseudocode for what we want beutiful soup to do for us 
+
+1. get the website 
+2. make a list of all links on the website and export those links to a spreadhseet 
+3. make a folder that is time and date stamped 
+4. download all the images on the website to the folder 
+5. print all done and date and time stamp to the same spreadhseet 
+
+# Note that this code assumes that you have already activated your virtual environment 
+# and installed the necessary dependencies, such as 
+# `requests`, `beautifulsoup4`, `openpyxl`, `os`, and `datetime`.
+
+First, let's import the necessary modules:
+
+```python
+import requests
+from bs4 import BeautifulSoup
+import re
+import os
+import datetime
+import openpyxl
+from openpyxl import Workbook
+```
+
+Next, let's define a function to get the website content:
+
+```python
+def get_website_content(url):
+    """Get the content of a website."""
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.text
+    else:
+        raise Exception(f"Failed to load the webpage: {url}")
+```
+
+Now, let's define a function to extract all the links from the website content:
+
+```python
+def extract_links(content):
+    """Extract all the links from a website content."""
+    soup = BeautifulSoup(content, 'html.parser')
+    links = []
+    for link in soup.find_all('a'):
+        href = link.get('href')
+        if href and re.match(r'^https?://', href):
+            links.append(href)
+    return links
+```
+
+Next, let's define a function to download all the images from the links:
+
+```python
+def download_images(links, output_folder):
+    """Download all the images from the links."""
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    for i, link in enumerate(links):
+        response = requests.get(link)
+        if response.status_code == 200:
+            filename = f"image_{i}.jpg"
+            filepath = os.path.join(output_folder, filename)
+            with open(filepath, 'wb') as f:
+                f.write(response.content)
+```
+
+Now, let's define a function to write the links to a spreadsheet:
+
+```python
+def write_links_to_spreadsheet(links, filename):
+    """Write the links to a spreadsheet."""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Links"
+    for i, link in enumerate(links):
+        ws.cell(row=i+1, column=1, value=link)
+    wb.save(filename)
+```
+
+Finally, let's put everything together in a main function:
+
+```python
+def main():
+    """Main function."""
+    # Get the website content
+    url = "https://example.com"
+    content = get_website_content(url)
+
+    # Extract all the links
+    links = extract_links(content)
+
+    # Create a timestamped folder
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_folder = f"output_{timestamp}"
+    os.makedirs(output_folder)
+
+    # Download all the images
+    download_images(links, output_folder)
+
+    # Write the links to a spreadsheet
+    write_links_to_spreadsheet(links, f"{output_folder}/links.xlsx")
+
+    # Print a success message
+    print(f"Successfully parsed {len(links)} links and downloaded the images to {output_folder}.")
+
+# Call the main function
+if __name__ == "__main__":
+    main()
+```
+
+This code should accomplish what you're asking for. 
+Note that you may need to modify the regular expression used to match the links or the 
+filename pattern used to save the images depending on the specific website you're parsing. 
+Also, be aware that downloading large numbers of images or scraping websites excessively can be 
+against the terms of service of some websites, so make sure you have permission to do so before 
+running this code.
+
+
+
+
+
+
+
+
+
+# below is another error log you almost had it the images were messed up and not readable JPGs and the spreadsheet never printed 
+
+
+
+(base) pc@pc-Lenovo-G500s:~/parser9/parser_env$ conda deactivate 
+pc@pc-Lenovo-G500s:~/parser9/parser_env$ pip install --upgrade pip
+Requirement already satisfied: pip in /home/pc/anaconda3/lib/python3.11/site-packages (24.0)
+pc@pc-Lenovo-G500s:~/parser9/parser_env$ python -m venv parser_env
+pc@pc-Lenovo-G500s:~/parser9/parser_env$ source bin/activate
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env$ cd bin
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 29
+    def get_website_content(https://www.drudgereport.com/):
+                                  ^^
+SyntaxError: invalid syntax
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 29
+    def get_website_content(https://www.drudgereport.com/):
+                                  ^^
+SyntaxError: invalid syntax
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python pareser9.py
+python: can't open file '/home/pc/parser9/parser_env/bin/pareser9.py': [Errno 2] No such file or directory
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 18, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ pip install requests 
+Collecting requests
+  Obtaining dependency information for requests from https://files.pythonhosted.org/packages/70/8e/0e2d847013cb52cd35b38c009bb167a1a26b2ce6cd6965bf26b47bc0bf44/requests-2.31.0-py3-none-any.whl.metadata
+  Downloading requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+Collecting charset-normalizer<4,>=2 (from requests)
+  Obtaining dependency information for charset-normalizer<4,>=2 from https://files.pythonhosted.org/packages/40/26/f35951c45070edc957ba40a5b1db3cf60a9dbb1b350c2d5bef03e01e61de/charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata
+  Downloading charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (33 kB)
+Collecting idna<4,>=2.5 (from requests)
+  Obtaining dependency information for idna<4,>=2.5 from https://files.pythonhosted.org/packages/c2/e7/a82b05cf63a603df6e68d59ae6a68bf5064484a0718ea5033660af4b54a9/idna-3.6-py3-none-any.whl.metadata
+  Downloading idna-3.6-py3-none-any.whl.metadata (9.9 kB)
+Collecting urllib3<3,>=1.21.1 (from requests)
+  Obtaining dependency information for urllib3<3,>=1.21.1 from https://files.pythonhosted.org/packages/a2/73/a68704750a7679d0b6d3ad7aa8d4da8e14e151ae82e6fee774e6e0d05ec8/urllib3-2.2.1-py3-none-any.whl.metadata
+  Downloading urllib3-2.2.1-py3-none-any.whl.metadata (6.4 kB)
+Collecting certifi>=2017.4.17 (from requests)
+  Obtaining dependency information for certifi>=2017.4.17 from https://files.pythonhosted.org/packages/ba/06/a07f096c664aeb9f01624f858c3add0a4e913d6c96257acb4fce61e7de14/certifi-2024.2.2-py3-none-any.whl.metadata
+  Downloading certifi-2024.2.2-py3-none-any.whl.metadata (2.2 kB)
+Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 889.8 kB/s eta 0:00:00
+Downloading certifi-2024.2.2-py3-none-any.whl (163 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 163.8/163.8 kB 2.0 MB/s eta 0:00:00
+Downloading charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (140 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.3/140.3 kB 2.5 MB/s eta 0:00:00
+Downloading idna-3.6-py3-none-any.whl (61 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.6/61.6 kB 1.1 MB/s eta 0:00:00
+Downloading urllib3-2.2.1-py3-none-any.whl (121 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.1/121.1 kB 2.3 MB/s eta 0:00:00
+Installing collected packages: urllib3, idna, charset-normalizer, certifi, requests
+Successfully installed certifi-2024.2.2 charset-normalizer-3.3.2 idna-3.6 requests-2.31.0 urllib3-2.2.1
+
+[notice] A new release of pip is available: 23.2.1 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 19, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ pip install bs4
+Collecting bs4
+  Obtaining dependency information for bs4 from https://files.pythonhosted.org/packages/51/bb/bf7aab772a159614954d84aa832c129624ba6c32faa559dfb200a534e50b/bs4-0.0.2-py2.py3-none-any.whl.metadata
+  Downloading bs4-0.0.2-py2.py3-none-any.whl.metadata (411 bytes)
+Collecting beautifulsoup4 (from bs4)
+  Obtaining dependency information for beautifulsoup4 from https://files.pythonhosted.org/packages/b1/fe/e8c672695b37eecc5cbf43e1d0638d88d66ba3a44c4d321c796f4e59167f/beautifulsoup4-4.12.3-py3-none-any.whl.metadata
+  Downloading beautifulsoup4-4.12.3-py3-none-any.whl.metadata (3.8 kB)
+Collecting soupsieve>1.2 (from beautifulsoup4->bs4)
+  Obtaining dependency information for soupsieve>1.2 from https://files.pythonhosted.org/packages/4c/f3/038b302fdfbe3be7da016777069f26ceefe11a681055ea1f7817546508e3/soupsieve-2.5-py3-none-any.whl.metadata
+  Downloading soupsieve-2.5-py3-none-any.whl.metadata (4.7 kB)
+Downloading bs4-0.0.2-py2.py3-none-any.whl (1.2 kB)
+Downloading beautifulsoup4-4.12.3-py3-none-any.whl (147 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 147.9/147.9 kB 1.6 MB/s eta 0:00:00
+Downloading soupsieve-2.5-py3-none-any.whl (36 kB)
+Installing collected packages: soupsieve, beautifulsoup4, bs4
+Successfully installed beautifulsoup4-4.12.3 bs4-0.0.2 soupsieve-2.5
+
+[notice] A new release of pip is available: 23.2.1 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 23, in <module>
+    import openpyxl
+ModuleNotFoundError: No module named 'openpyxl'
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ pip install openpyxl
+Collecting openpyxl
+  Obtaining dependency information for openpyxl from https://files.pythonhosted.org/packages/6a/94/a59521de836ef0da54aaf50da6c4da8fb4072fb3053fa71f052fd9399e7a/openpyxl-3.1.2-py2.py3-none-any.whl.metadata
+  Downloading openpyxl-3.1.2-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting et-xmlfile (from openpyxl)
+  Downloading et_xmlfile-1.1.0-py3-none-any.whl (4.7 kB)
+Downloading openpyxl-3.1.2-py2.py3-none-any.whl (249 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 250.0/250.0 kB 2.7 MB/s eta 0:00:00
+Installing collected packages: et-xmlfile, openpyxl
+Successfully installed et-xmlfile-1.1.0 openpyxl-3.1.2
+
+[notice] A new release of pip is available: 23.2.1 -> 24.0
+[notice] To update, run: pip install --upgrade pip
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9.py
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 467, in _make_request
+    self._validate_conn(conn)
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 1099, in _validate_conn
+    conn.connect()
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connection.py", line 653, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connection.py", line 806, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/util/ssl_.py", line 465, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^Daren is recognized as a top technology deal lawyer both in Silicon Valley, where he is based, and globally. He has handled matters relating to a wide variety of technologies, including cloud computing and software-as-a-service offerings, drones, autonomous vehicles, semiconductors, artificial intelligence, social media, infrastructure and platform technologies, blockchain, and augmented and virtual reality related technologies. This experience provides him with a broad perspective that is essential to analyzing difficult legal issues related to new and emerging technologies. He is ranked by Chambers, Legal 500, IAM Patent 1000, and IAM Strategy 300: The World’s Leading IP Strategists.^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/util/ssl_.py", line 509, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/anaconda3/lib/python3.11/ssl.py", line 517, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/anaconda3/lib/python3.11/ssl.py", line 1108, in _create
+    self.do_handshake()
+  File "/home/pc/anaconda3/lib/python3.11/ssl.py", line 1379, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 491, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='realclearpolitics.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 107, in <module>
+    main()
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 97, in main
+    download_images(links, output_folder)
+  File "/home/pc/parser9/parser_env/bin/parser9.py", line 58, in download_images
+    response = requests.get(link)
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/sessions.py", line 725, in send
+    history = [resp for resp in gen]
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/sessions.py", line 725, in <listcomp>
+    history = [resp for resp in gen]
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/sessions.py", line 266, in resolve_redirects
+    resp = self.send(
+           ^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc/parser9/parser_env/lib/python3.11/site-packages/requests/adapters.py", line 517, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='realclearpolitics.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')))
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ python parser9
+python: can't open file '/home/pc/parser9/parser_env/bin/parser9': [Errno 2] No such file or directory
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd parser_env
+bash: cd: parser_env: No such file or directory
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd parser_env
+bash: cd: parser_env: No such file or directory
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd . . 
+bash: cd: too many arguments
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd..
+cd..: command not found
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd..
+cd..: command not found
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd. . 
+Command 'cd.' not found, did you mean:
+  command 'cdi' from deb cdo (2.0.4-1)
+  command 'cdo' from deb cdo (2.0.4-1)
+  command 'cde' from deb cde (0.1+git9-g551e54d-1.2)
+  command 'cdw' from deb cdw (0.8.1-2)
+  command 'cdb' from deb tinycdb (0.78build3)
+  command 'cdp' from deb irpas (0.10-9)
+  command 'cd5' from deb cd5 (0.1-4)
+Try: sudo apt install <deb name>
+(parser_env) pc@pc-Lenovo-G500s:~/parser9/parser_env/bin$ cd
+(parser_env) pc@pc-Lenovo-G500s:~$ cd /parser9/parser_env
+bash: cd: /parser9/parser_env: No such file or directory
+(parser_env) pc@pc-Lenovo-G500s:~$ 
+
+
+fixing the main function: 
+
+def main():
+    """Main function."""
+    # Get the website content
+    url = "https://www.drudgereport.com/"
+    content = get_website_content(url)
+
+    # Extract all the links
+    links = extract_links(content)
+
+    # Create a timestamped folder
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_folder = f"output_{timestamp}"
+    os.makedirs(output_folder)
+
+    # Download all the images
+    download_images(links, output_folder)
+
+    # Write the links to a spreadsheet
+    write_links_to_spreadsheet(links, f"{output_folder}/links.xlsx")
+
+    # Print a success message
+    print(f"Successfully parsed {len(links)} links and downloaded the images to {output_folder}.")
+
+    # Append "All done" and date and time stamp to the spreadsheet
+    wb = openpyxl.load_workbook(f"{output_folder}/links.xlsx")
+    ws = wb.active
+    last_row = ws.max_rowpython-stdlib
+    ws.cell(row=last_row + 2, column=1, value="All done")
+    ws.cell(row=last_row + 2, column=2, value=datetime.datetime.now())
+    wb.save(f"{output_folder}/links.xlsx")
+
+# Call the main function
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+    ############################################
+
+
+    #
+
+    If you still encounter any issues or errors, please let me 
+    know the exact error message and the steps to reproduce the error, 
+    so I can provide further assistance.
+
+
+    ###############################################
+
+    python -c "import os; print(os.__file__)"
+
+    # run the above in the consel 
